@@ -1,11 +1,25 @@
 {
-    "version": "4.1.0",
-    "name": "cordova-plugin-twilio-video",
-    "cordova_name": "Twilio video plugin",
-    "license": "MIT",
-    "platforms": [
-        "android",
-        "ios"
-    ],
-    "engines": {}
+  "version": "4.1.1",
+  "name": "@respondea/cordova-plugin-v-twilio-video",
+  "cordova_name": "Twilio video plugin V",
+  "license": "MIT",
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakubboguslawski/cordova-plugin-v-media-capture.git"
+  },
+  "engines": {},
+  "description": "Cordova Plugin for Twilio Video",
+  "bugs": {
+    "url": "https://github.com/jakubboguslawski/cordova-plugin-v-media-capture/issues"
+  },
+  "homepage": "https://github.com/jakubboguslawski/cordova-plugin-v-media-capture#readme",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ""
 }
