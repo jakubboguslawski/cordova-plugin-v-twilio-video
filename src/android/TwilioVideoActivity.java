@@ -20,6 +20,8 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.textservice.TextInfo;
+import android.widget.TextView;
 
 import com.twilio.video.CameraCapturer;
 import com.twilio.video.CameraCapturer.CameraSource;
@@ -41,6 +43,7 @@ import com.twilio.video.VideoRenderer;
 import com.twilio.video.VideoTrack;
 import com.twilio.video.VideoView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -94,6 +97,9 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
     private FloatingActionButton localVideoActionFab;
     private FloatingActionButton muteActionFab;
     private FloatingActionButton switchAudioActionFab;
+
+    private TextView textInfo;
+
     private AudioManager audioManager;
     private String participantIdentity;
 
@@ -122,6 +128,7 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
         localVideoActionFab = findViewById(FAKE_R.getId("local_video_action_fab"));
         muteActionFab = findViewById(FAKE_R.getId("mute_action_fab"));
         switchAudioActionFab = findViewById(FAKE_R.getId("switch_audio_action_fab"));
+        textInfo = findViewById(FAKE_R.getId("text_info"));
 
         /*
          * Enable changing the volume using the up/down keys during a conversation
@@ -363,7 +370,6 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
     private void addRemoteParticipant(RemoteParticipant participant) {
         participantIdentity = participant.getIdentity();
 
-
         /*
          * Add participant renderer
          */
@@ -376,6 +382,17 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
              */
             if (remoteVideoTrackPublication.isTrackSubscribed()) {
                 addRemoteParticipantVideo(remoteVideoTrackPublication.getRemoteVideoTrack());
+            }
+
+            if (participantIdentity != null) {
+                try {
+                    JSONObject participantIdentityJson = new JSONObject(participant.getIdentity());
+                    if (participantIdentityJson != null && participantIdentityJson.has("n")) {
+                        textInfo.setText(String.format("Rozmawiasz z %s", participantIdentityJson.get("n").toString()));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -413,6 +430,8 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
      * Called when participant leaves the room
      */
     private void removeRemoteParticipant(RemoteParticipant participant) {
+        if (participant != null) textInfo.setText(String.format("Rozłączono: %s", participant.getIdentity()));
+
         if (!participant.getIdentity().equals(participantIdentity)) {
             return;
         }
@@ -447,6 +466,8 @@ public class TwilioVideoActivity extends AppCompatActivity implements CallAction
             public void onConnected(Room room) {
                 localParticipant = room.getLocalParticipant();
                 publishEvent(CallEvent.CONNECTED);
+
+                textInfo.setText("Połączono z pokojem");
 
                 final List<RemoteParticipant> remoteParticipants = room.getRemoteParticipants();
                 if (remoteParticipants != null && !remoteParticipants.isEmpty()) {

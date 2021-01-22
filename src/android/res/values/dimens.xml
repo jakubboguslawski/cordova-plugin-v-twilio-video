@@ -1,4 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_hangup_margin">55dp</dimen>
+    <dimen name="local_video_margin">55dp</dimen>
+    <dimen name="info_container_height">45dp</dimen>
 </resources>
